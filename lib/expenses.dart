@@ -11,6 +11,7 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  
   final List<Expense> _registeredExpenses = [
     Expense(
       title: 'something',
@@ -31,6 +32,7 @@ class _ExpensesState extends State<Expenses> {
       category: Category.food,
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
