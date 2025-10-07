@@ -20,6 +20,11 @@ class _NewExpenseState extends State<NewExpense> {
             maxLength: 50,
             decoration: InputDecoration(label: Text("Title: ")),
           ),
+          TextField(
+            maxLength: 4,
+            decoration: InputDecoration(label: Text("Amount")),
+            keyboardType: TextInputType.number,
+          ),
         ],
       ),
     );
