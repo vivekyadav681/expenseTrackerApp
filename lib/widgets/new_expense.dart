@@ -11,10 +11,13 @@ class NewExpense extends StatefulWidget {
 
 class _NewExpenseState extends State<NewExpense> {
 
-  String _enteredTitle = "";
-  void _saveTitle(String value) {
-    _enteredTitle = value;
-  }
+  final _textController = TextEditingController();
+
+  // String _enteredTitle = "";
+  // void _saveTitle(String value) {
+  //   _enteredTitle = value;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,11 +25,16 @@ class _NewExpenseState extends State<NewExpense> {
       child: Column(
         children: [
           TextField(
-            onChanged: _saveTitle,
+            controller: _textController,
             maxLength: 50,
             decoration: const InputDecoration(label: Text("Title: ")),
           ),
-          
+          Row(
+            children: [
+              ElevatedButton(onPressed: () {
+              }, child: Text("Something"))
+            ],
+          ),
           TextField(
             maxLength: 4,
             decoration: InputDecoration(label: Text("Amount")),
