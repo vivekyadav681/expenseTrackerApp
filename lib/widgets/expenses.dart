@@ -4,7 +4,7 @@ import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
 
 class Expenses extends StatefulWidget {
-  const Expenses({super.key});
+  Expenses({super.key});
 
   @override
   State<Expenses> createState() {
@@ -73,7 +73,7 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = Center(child: Text('No expenses listed'));
+    Widget mainContent = Center(child: Text('No tasks listed'));
 
     if (_registeredExpenses.isNotEmpty) {
       mainContent = ExpenseList(
