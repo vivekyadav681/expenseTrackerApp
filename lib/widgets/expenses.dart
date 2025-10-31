@@ -1,10 +1,12 @@
-import 'package:expense_tracker/widgets/expense_list/expense_list.dart';
-import 'package:expense_tracker/models/expense.dart';
-import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
 
+import 'package:expense_tracker/widgets/new_expense.dart';
+import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
+import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/widgets/chart/chart.dart';
+
 class Expenses extends StatefulWidget {
-  Expenses({super.key});
+  const Expenses({super.key});
 
   @override
   State<Expenses> createState() {
@@ -15,54 +17,25 @@ class Expenses extends StatefulWidget {
 class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [
     Expense(
-      title: 'something',
-      amount: 100,
+      title: 'Flutter Course',
+      amount: 19.99,
       date: DateTime.now(),
-      category: Category.travel,
+      category: Category.work,
     ),
     Expense(
-      title: 'Something else',
-      amount: 120,
+      title: 'Cinema',
+      amount: 15.69,
       date: DateTime.now(),
       category: Category.leisure,
     ),
-    Expense(
-      title: 'Some other shitty things',
-      amount: 200,
-      date: DateTime.now(),
-      category: Category.food,
-    ),
   ];
 
-  void onRemove(Expense expense) {
-    var index = _registeredExpenses.indexOf(expense);
-    setState(() {
-      _registeredExpenses.remove(expense);
-    });
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 2),
-        content: const Text('expense deleted'),
-        action: SnackBarAction(
-          label: 'undo',
-          onPressed: () {
-            setState(() {
-              _registeredExpenses.insert(index, expense);
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  void _openAddExpenseModal() {
+  void _openAddExpenseOverlay() {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
-    //Navigator.pop(context);
   }
 
   void _addExpense(Expense expense) {
@@ -71,32 +44,57 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void _removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense deleted.'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = Center(child: Text('No tasks listed'));
+    Widget mainContent = const Center(
+      child: Text('No expenses found. Start adding some!'),
+    );
 
     if (_registeredExpenses.isNotEmpty) {
-      mainContent = ExpenseList(
+      mainContent = ExpensesList(
         expenses: _registeredExpenses,
-        onRemove: onRemove,
+        onRemoveExpense: _removeExpense,
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Expense Tracker"),
-        backgroundColor: Color.fromRGBO(228, 207, 255, 0.5),
+        title: const Text('Flutter ExpenseTracker'),
         actions: [
           IconButton(
-            onPressed: _openAddExpenseModal,
+            onPressed: _openAddExpenseOverlay,
             icon: const Icon(Icons.add),
           ),
         ],
       ),
       body: Column(
         children: [
-          const Text('Something'),
-          Expanded(child: mainContent),
+          Chart(expenses: _registeredExpenses),
+          Expanded(
+            child: mainContent,
+          ),
         ],
       ),
     );
